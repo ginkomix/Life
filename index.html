@@ -9,30 +9,44 @@
 
         <header>
             <div class="menu">
-                <a href="text">Text</a>
-                <a href="canvas">Canvas</a>
-                <a href="svg">Svg</a>
-                <a href="about">About</a>
+
+                <a href="#text">Text</a>
+                <a href="#canvas">Canvas</a>
+                <a href="#svg">Svg</a>
+                <a href="#">About</a>
             </div>
         </header>
-        <section id="text">
-        </section>
-        <section id ="canvas"></section>
-        <section id="svg"></section>
-        <section id="about"></section>
-        <div id="control">
-            <div class="button-controls">
-               <div><img src="./img/left.png" alt=""></div>
-                <div><img src="./img/play.png" alt=""></div>
-                <div><img src="./img/right.png" alt=""></div>
+        <main>
+            <section id="text">
+                <div id="textGame">
+
+                </div>
+            </section>
+            <section id ="canvas">
+                canvas
+            </section>
+            <section id="svg">svg</section>
+            <section id="about">
+            <p>Игра жизнь</p>
+            <p>Сделал ginkomix</p>
+            </section>
+            <div id="controlProject">
+                <div id="control">
+                    <div class="button-controls">
+                        <div><img src="./img/left.png" alt=""></div>
+                        <div><img src="./img/play.png" alt=""></div>
+                        <div><img src="./img/right.png" alt=""></div>
+                    </div>
+                    <div class="size-game">
+                        <span>x</span><input placeholder="x" type="number">
+                        <span>y</span><input placeholder="y" type="number">
+                    </div>
+
+                </div>
+
+                <div class="spead"></div>
             </div>
-            <div class="">
-                <input type="number">
-                  <input type="number">
-            </div>
-            
-        </div>
-        <div class="spead"></div>
+        </main>
         <script src="./js/EventBus.js"></script>
         <script src="./js/router.js"></script>
         <script src="./js/main.js"></script>
