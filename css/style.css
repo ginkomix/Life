@@ -1,9 +1,61 @@
 * {
 	margin: 0;
 	padding: 0;
+    text-decoration: none;
+}
+header {
+    width: 100%;
+    max-width: 1366px;
+    padding: 0px 10px;
+}
+.menu {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: 25px;
+    padding: 0px 20px;
+    margin: 10px 5px;
+    color: black;
+    border: 1px solid black;
+    transition: 0.5s;
+}
+a:hover {
+    border: 1px solid white;
 }
 pre {
 	border: 1px solid black;
 	display: inline-block;
 	padding: 3px;
+}
+.button-controls {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+}
+#control {
+  width: 100%;
+    display: flex;
+   
+    justify-content: space-between;
+}
+.button-controls div {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    margin: 0px 5px;
+    border-radius: 100px;
+    
+}
+
+#control img{
+    width: 20px;
 }
