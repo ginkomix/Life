@@ -1,99 +1,167 @@
 class Life extends RenderText(Object) {
-    constructor(x,y) {
+    constructor(x,y,speed) {
         super();
         this.x = x;
         this.y = y;
         this.arrHistory = []
-        this.arr = new Array(x).fill(1).map(i => new Array(y)) ;
+        this.numStep = -1;
+        this.speed = speed || 5000;
+        this.state = 1;
+        this.timer = null;
+        this.stateChange= this.stateChange.bind(this); 
     }
 
+    new() {
 
+        Promise.resolve()
+            .then(()=> {
 
-    rand(arr) {
-        var self = this;
-        return new Promise(function(resolve) {
-            for(var i = 0;i<self.x;i++) {
-                for(var j = 0;j<self.y;j++) {
-                    self.arr[i][j] = 0;
+           this.drawTable(); document.querySelector('#play').addEventListener('click',this.stateChange);
+            this.rand();
+        })
+            .then(()=> {     
+            this.renderText(this.arrHistory[this.numStep]);
+            this.start();
+        });
+    }
+
+    rand() {
+
+        return   Promise.resolve()
+            .then(()=> {
+            let arr = new Array(this.x).fill(1).map(i => new Array(this.y));
+            for(var i = 0;i<this.x;i++) {
+                for(var j = 0;j<this.y;j++) {
+                    arr[i][j] = 0;
                 }
             }
-            self.arr[1][2] = 1;
-            self.arr[1][3] = 1;
-            self.arr[1][4] = 1;
+            arr[1][2] = 1;
+            arr[1][3] = 1;
+            arr[1][4] = 1;
             //	for(var i = 0;i<self.x;i++) {
             //		for(var j = 0;j<self.y;j++) {
             //		self.arr[i][j]	= Math.random() * (1 - 0) + 0;
             //		}
             //	}
+
+            this.pushToMainArr(arr);
+
+        });
+    }
+
+    stateChange() {
+
+        if(this.state===0) {
+            this.state=1;
+            this.start();
+           return;
+
+        } 
+        if(this.state===1){
+            this.state=0;
+            this.stop();
+           return;
+        }
+
+    }
+
+    start() {
+        let self = this;
+        this.timer =  setTimeout(function tick() {
+            if(self.state===1) {
+                self.step();
+            }
+
+            self.timer = setTimeout(tick, self.speed);
+        },  self.speed);
+    }
+
+    stop() {
+        clearTimeout(this.timer);
+    }
+
+    step() {
+                Promise.resolve()
+                    .then(()=> {
+                    this.logics(this.arrHistory[this.numStep]);
+                })
+                    .then(()=> {
+                    this.renderText(this.arrHistory[this.numStep]);
+                });
+        
+    }
+
+    pushToMainArr(arrBuf) {
+        return new Promise((resolve)=> {
+
+            this.numStep++;
+            let buf = new Array(this.x).fill(1).map(i => new Array(this.y));
+
+            for(var i = 0;i<this.x;i++) {
+                for(var j = 0;j<this.y;j++) {
+                    buf[i][j] = arrBuf[i][j];
+                }
+
+            }
+
+            this.arrHistory.push(buf);
             resolve();
         });
     }
 
-    start() {
-
-        Promise.resolve()
-            .then(()=> {
-            this.rand();
-        })
-            .then(()=> {
-            this.renderText(this.arr);
-        })
-    }
-
-     pushToMainArr(arr,mainArr)() {
-       
-            .then(()=>{
-            for(var i = 0;i<this.x;i++) {
-                for(var j = 0;j<this.y;j++) {
-                    this.arrBuff[i][j] =this.arr[i][j];
-                }
-
-            }
- 
-    }
 
 
-
-    logicLocal(x,y,arr,arrBuf) {
+    logicLocal(x,y,arr) {
         var count = 0;
 
-        for(var i = x-1;i<x+1;i++) {
-            if(i<0 && i>this.x) {
-                continue;
-            }
-            for(var j = y-1;j<y+1;j++) {
-                if(j<0 && j>this.y) {
+        for(var i = x-1;i<=x+1;i++) {
+            for(var j = y-1 ; j<=y+1 ; j++) {
+
+                if(i<0 || j<0 || i>=this.x || j>=this.y) {
                     continue;
                 }
+
                 if(i ===x && j ===y) {
                     continue;
                 }
-                if(arr[i][j]===0) {
-                    conut++;
+                if(arr[i][j]===1) {
+                    count++;
                 }
             }
-            if(conut===3) {
-                arrBuff[x][y]=1;
-            }
-            if(conut<2 && count>3) {
-                arrBuff[x][y]=0;
+
+        }
+        if(count===3) {
+            return 1;
+        }
+        if(count===2) {
+            if(arr[x][y]===1){
+                return 1
+            } else {
+                return 0;
             }
         }
-        return arrBuf;
+        if(count<2 || count>3) {
+            return 0;
+        }
+
     }
 
     logics(arr) {
+
+        var arrBuff = new Array(this.x).fill(1).map(i => new Array(this.y));
         Promise.resolve()
             .then(()=>{
-            var arrBuff = new Array(x).fill(1).map(i => new Array(y)) ;	
             for(var i = 0;i<arr.length;i++) {
                 for(var j = 0;j<arr[0].length;j++) {
-                    arrBuff = this.logicLocal(x,y,arr,arrBuf);
+                    arrBuff[i][j] = this.logicLocal(i,j,arr);
+
                 }
             }
+            return arrBuff;
         })
-        .then(()=>{
-            
+            .then((arrBuff)=>{
+            this.pushToMainArr(arrBuff);
+
         });
     }
 }
@@ -103,4 +171,4 @@ class Life extends RenderText(Object) {
 
 
 var life = new Life(10,10);
-life.start();
+life.new();

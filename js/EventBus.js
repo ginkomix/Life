@@ -7,9 +7,11 @@ EventBus.prototype.on = function(str, cb) {
     }  else {
         this.event[str] = [cb];
     }
+     console.log(this.event[str]);
 }
 EventBus.prototype.trigger = function(str) {
     if(this.event[str]) {
+       
         var arg = arguments;
         arg.slice = [].slice;
         arg = arg.slice(1);
