@@ -2,6 +2,8 @@ var Router = function (options) {
     this.routes = options.routes || [];
     this.eventBus = options.eventBus;
     this.init();
+  
+    
 }
 
 Router.prototype = {

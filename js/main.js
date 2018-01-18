@@ -1,12 +1,15 @@
-class Life extends RenderText(Object) {
+class Life extends RenderText(RenderCanvas(Object)) {
     constructor(x,y,speed) {
         super();
         this.x = x;
         this.y = y;
         this.arrHistory = []
         this.numStep = -1;
-        this.speed = speed || 5000;
+        this.speed = speed || 2000;
         this.state = 1;
+        this.square = 10;
+        this.width = 100;
+        this.height = 100;
         this.timer = null;
         this.stateChange= this.stateChange.bind(this); 
     }
@@ -16,8 +19,9 @@ class Life extends RenderText(Object) {
         Promise.resolve()
             .then(()=> {
 
-           this.drawTable(); document.querySelector('#play').addEventListener('click',this.stateChange);
+            document.querySelector('#play').addEventListener('click',this.stateChange);
             this.rand();
+            this.drawCanvas();
         })
             .then(()=> {     
             this.renderText(this.arrHistory[this.numStep]);
@@ -87,6 +91,7 @@ class Life extends RenderText(Object) {
                 })
                     .then(()=> {
                     this.renderText(this.arrHistory[this.numStep]);
+                    this.renderCanvas(this.arrHistory[this.numStep]);
                 });
         
     }
