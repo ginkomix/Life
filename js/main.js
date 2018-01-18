@@ -1,4 +1,4 @@
-class Life extends RenderText(RenderCanvas(Object)) {
+class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
     constructor(x,y,speed) {
         super();
         this.x = x;
@@ -19,11 +19,12 @@ class Life extends RenderText(RenderCanvas(Object)) {
         Promise.resolve()
             .then(()=> {
 
-            document.querySelector('#play').addEventListener('click',this.stateChange);
+           
             this.rand();
             this.drawCanvas();
+            this.drawRect();
         })
-            .then(()=> {     
+            .then(()=> {               document.querySelector('#play').addEventListener('click',this.stateChange);
             this.renderText(this.arrHistory[this.numStep]);
             this.start();
         });

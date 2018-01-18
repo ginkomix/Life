@@ -92,25 +92,12 @@ main {
     padding: 0px 10px;
       margin: 0px auto;
 }
-.textGame, .canvasGame {
+.textGame, .canvasGame, .svgGame {
     border: 1px solid black;
     width: 100%;
     height: 50vh;
     border-radius: 4px;
 }
-table {
-  width: 100%;
-  height: 100%;
- 
- 
-}
-td, th{
-	border: 1px solid black;
-    margin: 0px;
-    width: auto;
-    height: auto;
-   
-    
-  
-	
+rect {
+    border: 1px solid black;
 }
