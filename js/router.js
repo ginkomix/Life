@@ -2,8 +2,8 @@ var Router = function (options) {
     this.routes = options.routes || [];
     this.eventBus = options.eventBus;
     this.init();
-  
-    
+
+
 }
 
 Router.prototype = {
@@ -52,10 +52,13 @@ var router = new Router({
         name: 'About',
         match: '',
         onEnter: () =>{
-            document.querySelector('#about').style.display = "flex"
+            life.stop();
+            document.querySelector('#about').style.display = "flex";
         },
-        onLeave: () => {document.querySelector('#about').style.display = "none"
-                       }
+        onLeave: () => {
+            life.start();
+            document.querySelector('#about').style.display = "none";
+        }
     }, {
         name: 'Text',
         match: (text) => text === 'text',

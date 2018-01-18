@@ -45,6 +45,9 @@ a {
 a:hover {
     border: 1px solid white;
 }
+.button-pause {
+    display: none;
+}
 pre {
 	border: 1px solid black;
 	display: inline-block;

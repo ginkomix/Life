@@ -1,33 +1,60 @@
 class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
+
     constructor(x,y,speed) {
         super();
         this.x = x;
         this.y = y;
         this.arrHistory = []
-        this.numStep = -1;
-        this.speed = speed || 2000;
+        this.numStep = 0;
+        this.speed = speed || 100;
         this.state = 1;
-        this.square = 10;
-        this.width = 100;
-        this.height = 100;
+        this.square = 15;
+        this.firstPush = 1;
+        this.width = this.square*this.x;
+        this.height = this.square*this.y;
         this.timer = null;
         this.stateChange= this.stateChange.bind(this); 
+        this.backHistory = this.backHistory.bind(this);
+        this.nextHistoru = this.nextHistoru.bind(this);
+        this.start =  this.start.bind(this);
+        this.stop = this.stop.bind(this);
     }
 
     new() {
 
         Promise.resolve()
             .then(()=> {
-
-           
             this.rand();
             this.drawCanvas();
             this.drawRect();
         })
-            .then(()=> {               document.querySelector('#play').addEventListener('click',this.stateChange);
-            this.renderText(this.arrHistory[this.numStep]);
+            .then(()=> {    
+            document.querySelector('#play').addEventListener('click',this.stateChange);
+            this. historyRender();
             this.start();
         });
+    }
+
+    backHistory() {
+        if((this.numStep-1)<=0) {
+            return;
+        }
+        if(this.firstPush){
+            this.numStep--;
+            this.firstPush = 0;
+        }
+        this.numStep--;
+        this.historyRender();
+
+    }
+
+    nextHistoru() {
+        if((this.numStep)>=this.arrHistory.length) {
+            return;
+        }
+        this.numStep++;
+        this.historyRender();
+
     }
 
     rand() {
@@ -58,43 +85,58 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
 
         if(this.state===0) {
             this.state=1;
+            this.firstPush = 0;
             this.start();
-           return;
+            this.numStep = this.arrHistory.length;
+            document.querySelector('.button-play').style.display = 'block';
+            document.querySelector('.button-pause').style.display = 'none';
+            return;
 
         } 
         if(this.state===1){
             this.state=0;
             this.stop();
-           return;
+            this.firstPush = 1;
+            document.querySelector('.button-play').style.display = 'none';
+            document.querySelector('.button-pause').style.display = 'block';
+            return;
         }
 
     }
 
     start() {
         let self = this;
+        document.querySelector('#left').removeEventListener('click',this.backHistory);            document.querySelector('#right').removeEventListener('click',this.nextHistoru);
         this.timer =  setTimeout(function tick() {
-            if(self.state===1) {
-                self.step();
-            }
-
+            self.step();
             self.timer = setTimeout(tick, self.speed);
         },  self.speed);
     }
 
     stop() {
         clearTimeout(this.timer);
+        document.querySelector('#left').addEventListener('click',this.backHistory);
+        document.querySelector('#right').addEventListener('click',this.nextHistoru);
     }
 
     step() {
-                Promise.resolve()
-                    .then(()=> {
-                    this.logics(this.arrHistory[this.numStep]);
-                })
-                    .then(()=> {
-                    this.renderText(this.arrHistory[this.numStep]);
-                    this.renderCanvas(this.arrHistory[this.numStep]);
-                });
-        
+        Promise.resolve()
+            .then(()=> {
+
+            this.logics(this.arrHistory[this.numStep-1]);
+        })
+            .then(()=> {
+            this.renderText(this.arrHistory[this.numStep-1]);
+            this.renderCanvas(this.arrHistory[this.numStep-1]);
+            this.renderSvg(this.arrHistory[this.numStep-1]);
+        });
+
+    }
+
+    historyRender() {
+        this.renderText(this.arrHistory[this.numStep-1]);
+        this.renderCanvas(this.arrHistory[this.numStep-1]);
+        this.renderSvg(this.arrHistory[this.numStep-1]);
     }
 
     pushToMainArr(arrBuf) {
@@ -114,8 +156,6 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
             resolve();
         });
     }
-
-
 
     logicLocal(x,y,arr) {
         var count = 0;
@@ -171,10 +211,6 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
         });
     }
 }
-
-
-
-
 
 var life = new Life(10,10);
 life.new();
