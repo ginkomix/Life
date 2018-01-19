@@ -6,7 +6,7 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
         this.y = y;
         this.arrHistory = []
         this.numStep = 0;
-        this.speed = speed || 2000;
+        this.speed = speed || 5000;
         this.state = 1;
         this.square = 15;
         this.width = this.square*this.x;
@@ -18,6 +18,7 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
         this.start =  this.start.bind(this);
         this.stop = this.stop.bind(this);
         this.changeSize =this.changeSize.bind(this);
+        this.changeSpead = this.changeSpead.bind(this);
     }
 
     new() {
@@ -31,6 +32,8 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
         })
             .then((arr)=> {  
             this.pushToMainArr(arr);
+            
+            document.querySelector('#speadInput').addEventListener('change',this.changeSpead);
             document.querySelector('#xSize').addEventListener('change',this.changeSize);
             document.querySelector('#ySize').addEventListener('change',this.changeSize);
             document.querySelector('#xSize').addEventListener('keyup',this.changeSize);
@@ -40,7 +43,12 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
             this.start();
         });
     }
-
+    
+    changeSpead() {
+       this.speed =   document.querySelector('#speadInput').value*100;
+         
+    }
+    
     changeSize() {
         this.stop();
         let x = parseInt(document.querySelector('#xSize').value),

@@ -108,6 +108,15 @@ main {
     height: 50vh;
     border-radius: 4px;
 }
+.spead {
+    width: 100%;
+ display: flex;
+    justify-content: center;
+}
+.spead input {
+    max-width: 600px;
+    width: 100%;
+}
 rect {
     fill: white;
     stroke:black;
