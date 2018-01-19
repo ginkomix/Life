@@ -6,10 +6,9 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
         this.y = y;
         this.arrHistory = []
         this.numStep = 0;
-        this.speed = speed || 100;
+        this.speed = speed || 2000;
         this.state = 1;
         this.square = 15;
-        this.firstPush = 1;
         this.width = this.square*this.x;
         this.height = this.square*this.y;
         this.timer = null;
@@ -18,31 +17,84 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
         this.nextHistoru = this.nextHistoru.bind(this);
         this.start =  this.start.bind(this);
         this.stop = this.stop.bind(this);
+        this.changeSize =this.changeSize.bind(this);
     }
 
     new() {
 
         Promise.resolve()
             .then(()=> {
-            this.rand();
+
             this.drawCanvas();
             this.drawRect();
+            return this.rand();
         })
-            .then(()=> {    
+            .then((arr)=> {  
+            this.pushToMainArr(arr);
+            document.querySelector('#xSize').addEventListener('change',this.changeSize);
+            document.querySelector('#ySize').addEventListener('change',this.changeSize);
+            document.querySelector('#xSize').addEventListener('keyup',this.changeSize);
+            document.querySelector('#ySize').addEventListener('keyup',this.changeSize);
             document.querySelector('#play').addEventListener('click',this.stateChange);
             this. historyRender();
             this.start();
         });
     }
 
+    changeSize() {
+        this.stop();
+        let x = parseInt(document.querySelector('#xSize').value),
+            y = parseInt(document.querySelector('#ySize').value);
+        if(x<0 || x>20) {
+            x=10;
+            document.querySelector('#xSize').value = 10;
+        }
+        if(y<0 || y>20) {
+            y=10;
+            document.querySelector('#ySize').value = 10;
+        }
+        let arr = new Array(x).fill(1).map(i => new Array(y));
+        var histArr = this.arrHistory[this.numStep-1] ;
+
+        for(let i = 0;i<x;i++) {
+            for(let j = 0;j<y;j++) {
+                arr[i][j] = 0;
+            }
+        }
+        if(x<this.x) {
+            this.x =x;
+        }
+        if(y<this.y) {
+            this.y=y;
+        }
+        for(let i = 0;i<this.x;i++) {
+            for(let j = 0;j<this.y;j++) {
+
+                arr[i][j] = histArr[i][j];
+            }
+        }
+        this.x = x;
+        this.y = y;
+        this.width = this.square*this.y;
+        this.height = this.square*this.x;
+        this.numStep = 0;
+        this.arrHistory = [];
+        this.pushToMainArr(arr);
+        this.drawCanvas();
+        this.drawRect();
+
+
+
+        this.historyRender();
+        this.start();
+
+    }
+
     backHistory() {
         if((this.numStep-1)<=0) {
             return;
         }
-        if(this.firstPush){
-            this.numStep--;
-            this.firstPush = 0;
-        }
+
         this.numStep--;
         this.historyRender();
 
@@ -59,8 +111,7 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
 
     rand() {
 
-        return   Promise.resolve()
-            .then(()=> {
+        return new Promise((resolve)=>{
             let arr = new Array(this.x).fill(1).map(i => new Array(this.y));
             for(var i = 0;i<this.x;i++) {
                 for(var j = 0;j<this.y;j++) {
@@ -76,16 +127,16 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
             //		}
             //	}
 
-            this.pushToMainArr(arr);
+            resolve(arr);
 
-        });
+        })
     }
 
     stateChange() {
 
         if(this.state===0) {
             this.state=1;
-            this.firstPush = 0;
+
             this.start();
             this.numStep = this.arrHistory.length;
             document.querySelector('.button-play').style.display = 'block';
@@ -96,7 +147,7 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
         if(this.state===1){
             this.state=0;
             this.stop();
-            this.firstPush = 1;
+
             document.querySelector('.button-play').style.display = 'none';
             document.querySelector('.button-pause').style.display = 'block';
             return;
@@ -123,12 +174,18 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
         Promise.resolve()
             .then(()=> {
 
-            this.logics(this.arrHistory[this.numStep-1]);
+            return this.logics(this.arrHistory[this.numStep-1]);
+        })
+            .then((arrBuff)=> {
+
+            this.pushToMainArr(arrBuff);
         })
             .then(()=> {
+
             this.renderText(this.arrHistory[this.numStep-1]);
             this.renderCanvas(this.arrHistory[this.numStep-1]);
             this.renderSvg(this.arrHistory[this.numStep-1]);
+
         });
 
     }
@@ -140,8 +197,7 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
     }
 
     pushToMainArr(arrBuf) {
-        return new Promise((resolve)=> {
-
+        return new Promise((resolve)=>{
             this.numStep++;
             let buf = new Array(this.x).fill(1).map(i => new Array(this.y));
 
@@ -194,19 +250,19 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
 
     logics(arr) {
 
-        var arrBuff = new Array(this.x).fill(1).map(i => new Array(this.y));
-        Promise.resolve()
-            .then(()=>{
+
+        return new Promise((resolve)=>{
+
+            var arrBuff = new Array(this.x).fill(1).map(i => new Array(this.y));
             for(var i = 0;i<arr.length;i++) {
                 for(var j = 0;j<arr[0].length;j++) {
                     arrBuff[i][j] = this.logicLocal(i,j,arr);
 
                 }
             }
-            return arrBuff;
-        })
-            .then((arrBuff)=>{
-            this.pushToMainArr(arrBuff);
+
+            resolve(arrBuff);
+
 
         });
     }

@@ -25,6 +25,7 @@ const RenderSvg = (RenderSvg) => class extends RenderSvg {
 
         let svg = document.querySelector('#svgGame'),
             svgns = "http://www.w3.org/2000/svg";
+        svg.innerHTML ='';
         svg.style.width = this.width+'%';
         svg.style.height = this.height+'%';
         for(let i =0;i<this.x;i++) {   

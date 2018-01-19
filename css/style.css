@@ -43,7 +43,7 @@ a {
     transition: 0.5s;
 }
 a:hover {
-    border: 1px solid white;
+     opacity: 0.5;
 }
 .button-pause {
     display: none;
@@ -78,17 +78,24 @@ pre {
     transition: 0.5s;
 }
 .button-controls div:hover {
-     border: 1px solid white;
+     opacity: 0.5;
 }
 #control img{
     width: 20px;
+}
+.size-game {
+    position: relative;
 }
 .size-game span {
    margin-right: 5px;  
 }
 .size-game input {
     width: 33px;
+    height: 17px;
      padding-left: 2px;
+}
+.size-game input::-webkit-inner-spin-button { 
+  opacity: 1;
 }
 main {
     max-width: 1366px;

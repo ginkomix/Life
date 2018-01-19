@@ -25,7 +25,10 @@ const RenderCanvas = (RenderCanvas) => class extends RenderCanvas {
     }
 
     drawCanvas() {
-        let canvas = document.querySelector('#canvasGame');
+        let canvas = document.querySelector('#canvasGame'),
+        ctx = canvas.getContext('2d');
+       
+        ctx.clearRect(0,0,this.width,this.height);
         canvas.width = this.width;
         canvas.height = this.height;
         
