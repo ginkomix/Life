@@ -20,6 +20,7 @@ const RenderSvg = (RenderSvg) => class extends RenderSvg {
 
 
     }
+	
 
     drawRect() {
 
