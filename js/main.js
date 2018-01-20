@@ -19,7 +19,9 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
 		this.stop = this.stop.bind(this);
 		this.changeSize =this.changeSize.bind(this);
 		this.changeSpead = this.changeSpead.bind(this);
+		this.changeCellCanvas = this.changeCellCanvas.bind(this);
 		this.chandeCellSvg = this.chandeCellSvg.bind(this);
+
 	}
 
 	new() {
@@ -34,7 +36,7 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
 			.then((arr)=> {  
 			this.pushToMainArr(arr);
 
-			//			document.querySelector('#canvas').addEventListener('click',);
+			document.querySelector('#canvas').addEventListener('click',this.changeCellCanvas);
 			document.querySelector('#svg').addEventListener('click',this.chandeCellSvg);
 			document.querySelector('#speadInput').addEventListener('change',this.changeSpead);
 			document.querySelector('#xSize').addEventListener('change',this.changeSize);
@@ -51,6 +53,31 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
 		this.speed =   document.querySelector('#speadInput').value*100;
 	}
 
+	changeCellCanvas(event) {
+		if(this.state===1) {
+			return;
+		}
+		let x = event.offsetX,
+			y = event.offsetY,
+			arrNow = this.arrHistory[this.numStep-1];
+		for(let i =0;i<this.x;i++) {   
+			for(let j =0;j<this.y;j++) {
+				if(y>i*this.square && y<i*this.square+this.square && x>j*this.square && x<j*this.square+this.square) {
+					console.log(arrNow[i][j]);
+					if(arrNow[i][j] ===1) {
+						arrNow[i][j] = 0;
+					} else {
+						arrNow[i][j] = 1; 
+					}
+					this.arrHistory.length = this.numStep;
+					this.historyRender();
+					return;
+				}
+			}
+		}
+
+	}
+
 	chandeCellSvg(event) {
 		let target = event.target;
 		if(target.tagName!='rect' || this.state===1) {
@@ -64,7 +91,7 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
 		if(arrNow[parseInt(classArr[1])][parseInt(classArr[2])] ===1) {
 			arrNow[parseInt(classArr[1])][parseInt(classArr[2])] = 0;
 		} else {
-			arrNow[parseInt(classArr[1])][parseInt(classArr[2])] = 1;			   
+			arrNow[parseInt(classArr[1])][parseInt(classArr[2])] = 1; 
 		}
 		this.arrHistory.length = this.numStep;
 		this.historyRender();
@@ -192,7 +219,7 @@ class Life extends RenderText(RenderCanvas(RenderSvg(Object))) {
 			self.step();
 			self.timer = setTimeout(tick, self.speed);
 		},  self.speed);
-		
+
 	}
 
 	stop() {

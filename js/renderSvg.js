@@ -27,8 +27,8 @@ const RenderSvg = (RenderSvg) => class extends RenderSvg {
         let svg = document.querySelector('#svgGame'),
             svgns = "http://www.w3.org/2000/svg";
         svg.innerHTML ='';
-        svg.style.width = this.width+'%';
-        svg.style.height = this.height+'%';
+        svg.style.width = this.width+'px';
+        svg.style.height = this.height+'px';
         for(let i =0;i<this.x;i++) {   
             for(let j =0;j<this.y;j++) {
                 let rect = document.createElementNS(svgns,'rect');
